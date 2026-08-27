@@ -1052,6 +1052,46 @@
             }
         }
 
+        function isEditingGuestTable() {
+    const active = document.activeElement;
+    return !!(active && active.closest && active.closest('#guest-table-body'));
+}
+
+async function silentSync() {
+    try {
+        const data = await apiGet('getGuests', { adminType: currentAdminType });
+        if (data) {
+            guests = data.map(g => ({
+                ...g,
+                sesi: g.sesi || "Tidak Ada Sesi",
+                waktuHadir: g.waktuHadir || "",
+                kodeSouvenir: g.kodeSouvenir || "",
+                statusSouvenir: g.statusSouvenir || "",
+                keterangan: g.keterangan || ""
+            }));
+            localStorage.setItem(storageKey, JSON.stringify(guests));
+        }
+        updateDashboard();
+        if (!isEditingGuestTable()) {
+            renderTable();
+        }
+    } catch (err) {
+        console.error("Auto-sync gagal:", err);
+    }
+}
+
+function startDataPolling() {
+    stopDataPolling();
+    dataPollInterval = setInterval(silentSync, 5000); // ganti 5000 kalau mau interval lain (dalam milidetik)
+}
+
+function stopDataPolling() {
+    if (dataPollInterval) {
+        clearInterval(dataPollInterval);
+        dataPollInterval = null;
+    }
+}
+
         function cetakSemuaData() {
             const oldItemsPerPage = itemsPerPage;
             const oldCurrentPage = currentPage;
@@ -1132,7 +1172,8 @@
     }
 
     fetchDataFromServerOrLocal();
-    updatePrintHeader();   // <-- tambah ini
+    updatePrintHeader();
+    startDataPolling();
 
     switchAdminTab('dashboard');
     showToast(`Berhasil login sebagai Admin ${
@@ -1191,6 +1232,7 @@
             document.getElementById('login-user').value = '';
             document.getElementById('login-pass').value = '';
 
+            stopDataPolling();
             if(tvPollInterval) clearInterval(tvPollInterval);
         }
 
@@ -1941,6 +1983,7 @@ function applyFilters() {
 
         let tvTimeout = null;
         let tvPollInterval = null;
+        let dataPollInterval = null;
         let lastVipTimestamp = 0;
 
         function triggerVipEvent(guest) {
