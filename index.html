@@ -621,10 +621,18 @@
 
             <!-- SOUVENIR SCAN SECTION -->
             <div id="souvenir-section" class="hidden max-w-2xl mx-auto space-y-6">
-                <div class="no-print">
-                    <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">Scan Kupon Souvenir</h2>
-                    <p class="text-gray-500 text-xs md:text-sm mt-1">Arahkan kamera ke QR Code pada kupon souvenir untuk menandai souvenir telah diambil.</p>
-                </div>
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 no-print">
+        <div>
+            <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">Scan Kupon Souvenir</h2>
+            <p class="text-gray-500 text-xs md:text-sm mt-1">Arahkan kamera ke QR Code pada kupon souvenir untuk menandai souvenir telah diambil.</p>
+        </div>
+        <div class="flex flex-wrap gap-2 w-full lg:w-auto">
+            <button onclick="manualSync()" class="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg text-blue-700 hover:bg-blue-100 transition-colors shadow-sm text-sm font-medium">
+                <i class="ph ph-arrows-clockwise text-lg"></i>
+                Sinkron
+            </button>
+        </div>
+    </div>
 
                 <div class="no-print bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
                     <div id="souvenir-reader" class="w-full rounded-xl overflow-hidden bg-black flex items-center justify-center text-gray-400 text-sm" style="min-height:280px;">
@@ -1926,7 +1934,7 @@ function applyFilters() {
             } else {
                 panel.className = "p-5 rounded-xl border bg-red-50 border-red-200 text-red-800";
                 panel.innerHTML = `<div class="font-bold text-lg flex items-center gap-2"><i class="ph ph-x-circle"></i> Kode Tidak Ditemukan</div>
-                    <div class="mt-1">Kode tiket ini belum tertaut ke tamu manapun. Pastikan tiket sudah ditautkan lewat menu List Tamu Undangan.</div>`;
+                    <div class="mt-1">Kode kode ini belum tertaut ke tamu manapun. Pastikan kode kupon sudah ditautkan lewat menu List Tamu Undangan.</div>`;
                 showToast("Kode souvenir tidak ditemukan", "error");
             }
         }
