@@ -926,6 +926,7 @@
         // State untuk scanner QR Code (dipakai bergantian oleh modal tautkan tiket & tab Scan Souvenir)
         let html5QrCode = null;
         let linkingGuestId = null;
+        let souvenirScanLocked = false;
 
         // Default guests
         const defaultGuests = [];
@@ -1224,11 +1225,12 @@
         renderTable();
 
     } else if (tab === 'souvenir') {
-        souvenirSec.classList.remove('hidden');
-        navSouvenir.className = activeClass;
-        document.getElementById('souvenir-result').classList.add('hidden');
-        startScanner('souvenir-reader', handleSouvenirScanned);
-    }
+    souvenirSec.classList.remove('hidden');
+    navSouvenir.className = activeClass;
+    document.getElementById('souvenir-result').classList.add('hidden');
+    souvenirScanLocked = false;
+    startScanner('souvenir-reader', handleSouvenirScanned);
+}
 }
 
 
@@ -1861,8 +1863,23 @@ function applyFilters() {
 
         // ---- Scan Souvenir (tab khusus petugas souvenir) ----
         function handleSouvenirScanned(code) {
-            processSouvenirScan(code);
-        }
+    if (souvenirScanLocked) return; // sedang diproses/jeda, abaikan dulu
+    souvenirScanLocked = true;
+
+    if (html5QrCode) {
+        try { html5QrCode.pause(true); } catch (e) {}
+    }
+
+    processSouvenirScan(code).finally(() => {
+        // jeda sebelum kamera aktif lagi, supaya kupon yang sama tidak langsung terbaca ulang
+        setTimeout(() => {
+            souvenirScanLocked = false;
+            if (html5QrCode) {
+                try { html5QrCode.resume(); } catch (e) {}
+            }
+        }, 2000);
+    });
+}
 
         function submitManualSouvenirCode() {
             const input = document.getElementById('souvenir-manual-input');
