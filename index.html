@@ -1925,7 +1925,7 @@ function applyFilters() {
                 panel.className = "p-5 rounded-xl border bg-green-50 border-green-200 text-green-800";
                 panel.innerHTML = `<div class="font-bold text-lg flex items-center gap-2"><i class="ph ph-check-circle"></i> Souvenir Diambil</div>
                     <div class="mt-1">${result.guest.nama} (${result.guest.asal || '-'}) - ${result.guest.jenis || ''}</div>`;
-                showToast(`Souvenir untuk ${result.guest.nama} berhasil ditandai diambil`, "success");
+                showToast(`Souvenir untuk ${result.guest.nama} berhasil diambil`, "success");
             } else if (result.status === 'already') {
                 panel.className = "p-5 rounded-xl border bg-yellow-50 border-yellow-200 text-yellow-800";
                 panel.innerHTML = `<div class="font-bold text-lg flex items-center gap-2"><i class="ph ph-warning-circle"></i> Sudah Diambil</div>
