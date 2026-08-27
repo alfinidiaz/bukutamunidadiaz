@@ -358,7 +358,7 @@
             </form>
 
             <div class="mt-8 pt-6 border-t border-gray-100 text-center">
-                <p class="text-[11px] md:text-xs text-gray-400 font-medium tracking-wide">© 2026 Thegar Diaztama, All Rights Reserved. Version 1.141. Made in Kab. Bengkayang.</p>
+                <p class="text-[11px] md:text-xs text-gray-400 font-medium tracking-wide">© 2026 Thegar Diaztama, All Rights Reserved. Version 2.142. Made in Kab. Bengkayang.</p>
             </div>
         </div>
     </div>
@@ -590,7 +590,7 @@
                                     <th class="hidden print-only px-4 md:px-6 py-4 font-medium text-center w-1/6 align-middle">Status<br>Kehadiran</th>
                                     <th class="px-2 md:px-4 py-4 font-medium text-center align-middle">Waktu Hadir</th>
                                     <th class="px-2 md:px-4 py-4 font-medium text-center align-middle no-print">Kode Souvenir</th>
-                                    <th class="px-2 md:px-4 py-4 font-medium text-center align-middle no-print">Status Souvenir</th>
+                                    <th class="px-2 md:px-4 py-4 font-medium text-center align-middle">Status Souvenir</th>
                                     <th class="px-2 md:px-4 py-4 font-medium text-center align-middle">Keterangan</th>
                                 </tr>
                             </thead>
@@ -1481,8 +1481,8 @@ function updateDashboard() {
                     <!-- Status Souvenir Column -->
                     <td class="px-2 md:px-4 py-4 align-middle text-center border-b border-gray-200 no-print">
                         ${statusSouvenir === 'Telah Diambil'
-                            ? `<span class="inline-flex items-center gap-1 text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full text-xs whitespace-nowrap"><i class="ph ph-check-circle"></i> Telah Diambil</span>`
-                            : `<span class="inline-flex items-center gap-1 text-gray-500 font-medium bg-gray-100 px-3 py-1 rounded-full text-xs whitespace-nowrap">Belum Diambil</span>`
+                            ? `<span class="inline-flex items-center justify-center gap-1 text-green-600 font-medium bg-green-100 px-3 md:px-4 rounded-full text-xs md:text-sm whitespace-nowrap h-[36px]"><i class="ph ph-check-circle"></i> Telah Diambil</span>`
+                            : `<span class="inline-flex items-center justify-center gap-1 text-gray-500 font-medium bg-gray-100 px-3 md:px-4 rounded-full text-xs md:text-sm whitespace-nowrap h-[36px]">Belum Diambil</span>`
                         }
                     </td>
                     <!-- Keterangan Column -->
