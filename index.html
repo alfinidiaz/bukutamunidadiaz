@@ -1063,7 +1063,7 @@ async function silentSync() {
     const myRequestId = ++syncRequestId;
     try {
         const data = await apiGet('getGuests', { adminType: currentAdminType });
-        if (myRequestId !== syncRequestId) return; // dilewati oleh sinkron yang lebih baru
+        if (myRequestId !== syncRequestId) return;
         if (data && data.length > 0) {
             guests = data.map(g => ({
                 ...g,
@@ -1274,7 +1274,7 @@ function stopDataPolling() {
     listSec.classList.remove('hidden');
     navList.className = activeClass;
     updatePrintHeader();   
-    manualSync();          
+    renderTable();                    
 
     } else if (tab === 'souvenir') {
     souvenirSec.classList.remove('hidden');
