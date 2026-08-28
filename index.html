@@ -1061,7 +1061,7 @@ async function silentSync() {
 
     try {
         const data = await apiGet('getGuests', { adminType: currentAdminType });
-        if (data) {
+        if (data && data.length > 0) {
             guests = data.map(g => ({
                 ...g,
                 sesi: g.sesi || "Tidak Ada Sesi",
