@@ -1053,12 +1053,12 @@
             }
         }
 
-        function isEditingGuestTable() {
-    const active = document.activeElement;
-    return !!(active && active.closest && active.closest('#guest-table-body'));
-}
-
 async function silentSync() {
+    const listSec = document.getElementById('list-section');
+    if (listSec && !listSec.classList.contains('hidden')) {
+        return;
+    }
+
     try {
         const data = await apiGet('getGuests', { adminType: currentAdminType });
         if (data) {
@@ -1073,9 +1073,7 @@ async function silentSync() {
             localStorage.setItem(storageKey, JSON.stringify(guests));
         }
         updateDashboard();
-        if (!isEditingGuestTable()) {
-            renderTable();
-        }
+        renderTable();
     } catch (err) {
         console.error("Auto-sync gagal:", err);
     }
@@ -1270,10 +1268,11 @@ function stopDataPolling() {
         updateDashboard();
 
     } else if (tab === 'list') {
-        listSec.classList.remove('hidden');
-        navList.className = activeClass;
-        updatePrintHeader();   // update header print list
-        renderTable();
+    listSec.classList.remove('hidden');
+    navList.className = activeClass;
+    updatePrintHeader();   
+    manualSync();          
+    }
 
     } else if (tab === 'souvenir') {
     souvenirSec.classList.remove('hidden');
