@@ -1030,11 +1030,13 @@
 
         // FUNGSI SINKRONISASI MANUAL
         async function manualSync() {
-            showToast("Mensinkronkan data dengan server...", "info");
-            try {
-                const data = await apiGet('getGuests', { adminType: currentAdminType });
-                if (data && data.length > 0) {
-                    guests = data.map(g => ({
+    const myRequestId = ++syncRequestId;
+    showToast("Mensinkronkan data dengan server...", "info");
+    try {
+        const data = await apiGet('getGuests', { adminType: currentAdminType });
+        if (myRequestId !== syncRequestId) return;
+        if (data && data.length > 0) {
+            guests = data.map(g => ({
                         ...g,
                         sesi: g.sesi || "Tidak Ada Sesi",
                         waktuHadir: g.waktuHadir || "",
@@ -1058,9 +1060,10 @@ async function silentSync() {
     if (listSec && !listSec.classList.contains('hidden')) {
         return;
     }
-
+    const myRequestId = ++syncRequestId;
     try {
         const data = await apiGet('getGuests', { adminType: currentAdminType });
+        if (myRequestId !== syncRequestId) return; // dilewati oleh sinkron yang lebih baru
         if (data && data.length > 0) {
             guests = data.map(g => ({
                 ...g,
@@ -1983,6 +1986,7 @@ function applyFilters() {
         let tvTimeout = null;
         let tvPollInterval = null;
         let dataPollInterval = null;
+        let syncRequestId = 0;
         let lastVipTimestamp = 0;
 
         function triggerVipEvent(guest) {
