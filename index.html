@@ -679,6 +679,16 @@
     <!-- PRESENTATION VIEW -->
     <div id="presentation-view" class="hidden absolute inset-0 z-50 bg-floral-gold flex items-center justify-center p-8 no-print">
 
+    <!-- Background Video -->
+    <video id="tv-bg-video" autoplay muted loop playsinline preload="auto"
+        poster="https://res.cloudinary.com/dmgxfnlx9/image/upload/v1779163347/Background_4_osebr4.jpg"
+        class="absolute inset-0 w-full h-full object-cover -z-10">
+        <source src="https://res.cloudinary.com/dmgxfnlx9/video/upload/v1791655545/BG_Display_TV_Nida_Diaz_su8nof.mp4" type="video/mp4">
+    </video>
+
+    <!-- Lapisan gelap agar tulisan tetap terbaca -->
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-slate-900/60 to-slate-950/80"></div>
+        
         <!-- Idle State -->
         <div id="tv-idle" class="text-center animate-fade-in">
           <div class="mb-8 flex justify-center opacity-100">
@@ -1215,6 +1225,8 @@ function stopDataPolling() {
 
     // tampilkan TV
     document.getElementById('presentation-view').classList.remove('hidden');
+
+    document.getElementById('tv-bg-video')?.play().catch(() => {});
 
     // ambil elemen spesifik
     const titleEl = document.getElementById('tv-main-title');
