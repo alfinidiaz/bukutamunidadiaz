@@ -521,6 +521,13 @@
                             </div>
                             <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 text-lg md:text-xl"><i class="ph ph-handshake"></i></div>
                         </div>
+                        <div class="bg-white p-4 col-span-2 lg:col-span-1 md:p-5 rounded-xl border border-gray-100 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
+                            <div>
+                                <p class="text-xs md:text-sm text-gray-500 font-medium">Tamu Baru</p>
+                                <h4 class="text-xl md:text-2xl font-bold text-gray-900" id="stat-tamu-baru">0</h4>
+                            </div>
+                            <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 text-lg md:text-xl"><i class="ph ph-user-plus"></i></div>
+                        </div>
                     </div>
 
                     <div class="lg:col-span-2 bg-white p-4 md:p-6 rounded-xl border border-gray-100 shadow-sm">
@@ -780,6 +787,7 @@
                 <option value="Keluarga">Keluarga</option>
                 <option value="Teman Pasangan">Teman Pasangan</option>
                 <option value="Teman Orang Tua">Teman Orang Tua</option>
+                <option value="Tamu Baru">Tamu Baru</option>
             </select>
         </div>
 
@@ -1339,7 +1347,7 @@ function updatePrintHeader() {
 function updateDashboard() {
     const total = guests.length;
     let hadir = 0, tidakHadir = 0, jumlahDatang = 0;
-    let vip = 0, keluarga = 0, temanPasangan = 0, temanOrtu = 0;
+    let vip = 0, keluarga = 0, temanPasangan = 0, temanOrtu = 0, tamuBaru = 0;
     let sesi1 = 0, sesi2 = 0;
     let asalCount = {};
 
@@ -1351,6 +1359,7 @@ function updateDashboard() {
         else if (g.jenis === 'Keluarga') keluarga++;
         else if (g.jenis === 'Teman Pasangan') temanPasangan++;
         else if (g.jenis === 'Teman Orang Tua') temanOrtu++;
+        else if (g.jenis === 'Tamu Baru') tamuBaru++;
 
         if (g.sesi === 'Sesi 1') sesi1++;
         else if (g.sesi === 'Sesi 2') sesi2++;
@@ -1371,6 +1380,7 @@ function updateDashboard() {
     document.getElementById('stat-keluarga').innerText = keluarga;
     document.getElementById('stat-teman-pasangan').innerText = temanPasangan;
     document.getElementById('stat-teman-ortu').innerText = temanOrtu;
+    document.getElementById('stat-tamu-baru').innerText = tamuBaru;
 
     renderChart(asalCount);
 }
@@ -1442,7 +1452,7 @@ function updateDashboard() {
                 document.getElementById('btn-next').disabled = currentPage === totalPages;
             }
 
-            const jenisOptions = ['VIP', 'Keluarga', 'Teman Pasangan', 'Teman Orang Tua'];
+            const jenisOptions = ['VIP', 'Keluarga', 'Teman Pasangan', 'Teman Orang Tua', 'Tamu Baru'];
             const sesiOptions = ['Tidak Ada Sesi', 'Sesi 1', 'Sesi 2'];
 
             currentData.forEach((g, index) => {
@@ -1766,7 +1776,7 @@ function applyFilters() {
                 id: newId,
                 nama: "",
                 asal: "",
-                jenis: "Keluarga",
+                jenis: "Tamu Baru",
                 sesi: "Tidak Ada Sesi",
                 jumlahDatang: 0,
                 isHadir: false,
