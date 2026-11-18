@@ -344,6 +344,12 @@
             width: 100% !important;
             border-radius: 0.75rem;
         }
+
+        /* Transisi buka-tutup sidebar */
+        #admin-sidebar {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 <body class="text-gray-800 antialiased overflow-hidden h-screen w-screen flex">
@@ -386,13 +392,21 @@
     <!-- ADMIN LAYOUT -->
     <div id="admin-layout" class="hidden w-full h-full bg-gray-50 flex-col md:flex-row overflow-hidden">
 
-        <aside class="w-full md:w-64 bg-white border-b md:border-r border-gray-200 flex-none flex flex-col no-print h-auto md:h-full shadow-sm md:shadow-none z-10">
-            <div class="p-4 md:p-6 border-b border-gray-100 flex justify-between items-center md:block text-center">
-                <div class="text-left md:text-center">
-                    <h2 class="font-heading font-bold text-base md:text-lg text-gray-900 leading-tight">
-                        Buku Tamu <br class="hidden md:block"> Ngunduh & Resepsi <br class="hidden md:block"> Nida & Diaz </h2>
-                    <p id="sidebar-role-title" class="text-[10px] md:text-xs text-gold-600 mt-1 md:mt-2 uppercase tracking-wider font-semibold">Administrator</p>
+                <aside id="admin-sidebar" class="w-full md:w-64 bg-white border-b md:border-r border-gray-200 flex-none flex flex-col no-print h-auto md:h-full shadow-sm md:shadow-none z-10 overflow-hidden">
+            <div class="p-4 md:p-6 border-b border-gray-100 flex justify-between items-center md:items-start gap-2">
+                <div class="text-left flex-1 min-w-0">
+                    <h2 class="font-heading font-bold text-base md:text-lg text-gray-900 leading-tight whitespace-nowrap">
+                        Buku Tamu <br class="hidden md:block"> Ngunduh & Resepsi <br class="hidden md:block"> Nida & Diaz
+                    </h2>
+                    <p id="sidebar-role-title" class="text-[10px] md:text-xs text-gold-600 mt-1 md:mt-2 uppercase tracking-wider font-semibold whitespace-nowrap">Administrator</p>
                 </div>
+
+                <!-- Tombol Toggle Tutup Sidebar (Tampil di Desktop) -->
+                <button onclick="toggleSidebar()" class="hidden md:flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 text-gray-500 hover:text-gold-700 hover:bg-gold-50 hover:border-gold-300 transition-colors flex-shrink-0" title="Tutup Sidebar">
+                    <i class="ph ph-x-square text-lg"></i>
+                </button>
+
+                <!-- Tombol Keluar (Tampil di Mobile) -->
                 <button onclick="logout()" class="md:hidden flex items-center justify-center p-2 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-colors" title="Keluar">
                     <i class="ph ph-sign-out text-xl"></i>
                 </button>
@@ -426,14 +440,19 @@
             <!-- DASHBOARD SECTION -->
             <div id="dashboard-section" class="max-w-6xl mx-auto block space-y-6">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 no-print">
-                    <!-- Judul -->
-                    <div>
-                        <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">
-                            Dashboard Statistik
-                        </h2>
-                        <p class="text-gray-500 text-xs md:text-sm mt-1">
-                            Ringkasan kehadiran tamu undangan Nida & Diaz.
-                        </p>
+                    <!-- Judul + Tombol Buka Sidebar -->
+                    <div class="flex items-start gap-3">
+                        <button onclick="toggleSidebar()" class="btn-open-sidebar hidden mt-0.5 w-10 h-10 rounded-xl bg-white border border-gray-200 text-gray-700 hover:text-gold-700 hover:border-gold-300 hover:bg-gold-50 shadow-sm transition-all items-center justify-center flex-shrink-0" title="Buka Sidebar">
+                            <i class="ph ph-list text-xl"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">
+                                Dashboard Statistik
+                            </h2>
+                            <p class="text-gray-500 text-xs md:text-sm mt-1">
+                                Ringkasan kehadiran tamu undangan Nida & Diaz.
+                            </p>
+                        </div>
                     </div>
 
                     <!-- Group Tombol -->
@@ -551,9 +570,15 @@
             <!-- LIST TAMU SECTION -->
             <div id="list-section" class="hidden max-w-6xl mx-auto space-y-6">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 no-print">
-                    <div>
-                        <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">List Tamu Undangan</h2>
-                        <p class="text-gray-500 text-xs md:text-sm mt-1">Kelola data kehadiran tamu di sini.</p>
+                    <!-- Judul + Tombol Buka Sidebar -->
+                    <div class="flex items-start gap-3">
+                        <button onclick="toggleSidebar()" class="btn-open-sidebar hidden mt-0.5 w-10 h-10 rounded-xl bg-white border border-gray-200 text-gray-700 hover:text-gold-700 hover:border-gold-300 hover:bg-gold-50 shadow-sm transition-all items-center justify-center flex-shrink-0" title="Buka Sidebar">
+                            <i class="ph ph-list text-xl"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">List Tamu Undangan</h2>
+                            <p class="text-gray-500 text-xs md:text-sm mt-1">Kelola data kehadiran tamu di sini.</p>
+                        </div>
                     </div>
                     <!-- BUTTONS KELOMPOK AKSI -->
                     <div class="flex flex-wrap gap-2 w-full lg:w-auto">
@@ -646,20 +671,32 @@
                 </div>
             </div>
 
-            <!-- SOUVENIR SCAN SECTION -->
+                        <!-- SOUVENIR SCAN SECTION -->
             <div id="souvenir-section" class="hidden max-w-2xl mx-auto space-y-6">
-    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 no-print">
-        <div>
-            <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">Scan Kupon Souvenir</h2>
-            <p class="text-gray-500 text-xs md:text-sm mt-1">Arahkan kamera ke QR Code pada kupon souvenir untuk menandai souvenir telah diambil.</p>
-        </div>
-        <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-            <button onclick="manualSync()" class="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg text-blue-700 hover:bg-blue-100 transition-colors shadow-sm text-sm font-medium">
-                <i class="ph ph-arrows-clockwise text-lg"></i>
-                Sinkron
-            </button>
-        </div>
-    </div>
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 no-print">
+                    <div class="flex items-start gap-3">
+                        <!-- Tombol Buka Sidebar (muncul saat sidebar ditutup) -->
+                        <button onclick="toggleSidebar()" class="btn-open-sidebar hidden mt-0.5 w-10 h-10 rounded-xl bg-white border border-gray-200 text-gray-700 hover:text-gold-700 hover:border-gold-300 hover:bg-gold-50 shadow-sm transition-all items-center justify-center flex-shrink-0" title="Buka Sidebar">
+                            <i class="ph ph-list text-xl"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-heading font-bold text-gray-900">Scan Kupon Souvenir</h2>
+                            <p class="text-gray-500 text-xs md:text-sm mt-1">Arahkan kamera ke QR Code pada kupon souvenir untuk menandai souvenir telah diambil.</p>
+                        </div>
+                    </div>
+
+                    <!-- Group Tombol Sinkron & Full Screen -->
+                    <div class="flex flex-wrap gap-2 w-full lg:w-auto">
+                        <button onclick="manualSync()" class="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg text-blue-700 hover:bg-blue-100 transition-colors shadow-sm text-sm font-medium whitespace-nowrap">
+                            <i class="ph ph-arrows-clockwise text-lg"></i>
+                            Sinkron
+                        </button>
+                        <button id="btn-souvenir-fullscreen" onclick="toggleSouvenirFullScreen()" class="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-white border border-gold-400 px-4 py-2 rounded-lg text-gold-700 hover:bg-gold-50 transition-colors shadow-sm text-sm font-medium whitespace-nowrap">
+                            <i id="icon-souvenir-fullscreen" class="ph ph-corners-out text-lg"></i>
+                            <span id="text-souvenir-fullscreen">Full Screen</span>
+                        </button>
+                    </div>
+                </div>
 
                 <div class="no-print bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
                     <div id="souvenir-reader" class="w-full rounded-xl overflow-hidden bg-black flex items-center justify-center text-gray-400 text-sm" style="min-height:280px;">
@@ -1324,8 +1361,75 @@ function stopDataPolling() {
 }
 }
 
+        // =====================================================================
+        // LOGIKA TOGGLE SIDEBAR & FULL SCREEN SCAN SOUVENIR
+        // =====================================================================
+        let isSidebarOpen = true;
 
-// TARUH DI SINI
+        function setSidebarState(open) {
+            isSidebarOpen = open;
+            const sidebar = document.getElementById('admin-sidebar');
+            const openBtns = document.querySelectorAll('.btn-open-sidebar');
+
+            if (!sidebar) return;
+
+            if (isSidebarOpen) {
+                sidebar.classList.remove('md:w-0', 'md:border-r-0');
+                sidebar.classList.add('md:w-64', 'md:border-r');
+                openBtns.forEach(btn => {
+                    btn.classList.add('hidden');
+                    btn.classList.remove('md:inline-flex');
+                });
+            } else {
+                sidebar.classList.remove('md:w-64', 'md:border-r');
+                sidebar.classList.add('md:w-0', 'md:border-r-0');
+                openBtns.forEach(btn => {
+                    btn.classList.remove('hidden');
+                    btn.classList.add('md:inline-flex');
+                });
+            }
+        }
+
+        function toggleSidebar() {
+            setSidebarState(!isSidebarOpen);
+        }
+
+        function toggleSouvenirFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    // Otomatis tutup sidebar saat masuk Full Screen agar tampilan scan lega
+                    setSidebarState(false);
+                }).catch(err => {
+                    showToast("Gagal mengaktifkan Full Screen: " + err.message, "error");
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    // Buka kembali sidebar saat keluar Full Screen
+                    setSidebarState(true);
+                }).catch(err => {
+                    console.error(err);
+                });
+            }
+        }
+
+        // Sinkronkan tampilan tombol jika user menekan tombol ESC untuk keluar dari Full Screen
+        document.addEventListener('fullscreenchange', () => {
+            const btn = document.getElementById('btn-souvenir-fullscreen');
+            const icon = document.getElementById('icon-souvenir-fullscreen');
+            const text = document.getElementById('text-souvenir-fullscreen');
+            if (!btn || !icon || !text) return;
+
+            if (document.fullscreenElement) {
+                btn.className = "flex-1 lg:flex-none flex items-center justify-center gap-2 bg-gold-600 border border-gold-600 px-4 py-2 rounded-lg text-white hover:bg-gold-700 transition-colors shadow-sm text-sm font-medium whitespace-nowrap";
+                icon.className = "ph ph-corners-in text-lg";
+                text.innerText = "Keluar Full Screen";
+            } else {
+                btn.className = "flex-1 lg:flex-none flex items-center justify-center gap-2 bg-white border border-gold-400 px-4 py-2 rounded-lg text-gold-700 hover:bg-gold-50 transition-colors shadow-sm text-sm font-medium whitespace-nowrap";
+                icon.className = "ph ph-corners-out text-lg";
+                text.innerText = "Full Screen";
+            }
+        });
+        
 function updatePrintHeader() {
     // DASHBOARD
     const dashboardTitle = document.getElementById('dashboard-print-title');
