@@ -350,6 +350,15 @@
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                         border-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        /* Mode Full Screen Scan Souvenir: tutup header & tombol menu di mobile */
+        @media (max-width: 767px) {
+            body.souvenir-fullscreen #admin-sidebar {
+                display: none !important;
+            }
+        }
+        body.souvenir-fullscreen footer {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="text-gray-800 antialiased overflow-hidden h-screen w-screen flex">
@@ -392,17 +401,17 @@
     <!-- ADMIN LAYOUT -->
     <div id="admin-layout" class="hidden w-full h-full bg-gray-50 flex-col md:flex-row overflow-hidden">
 
-         <aside id="admin-sidebar" class="w-full md:w-64 bg-white border-b md:border-r border-gray-200 flex-none flex flex-col no-print h-auto md:h-full shadow-sm md:shadow-none z-10 overflow-hidden">
-            <div class="p-4 md:p-6 border-b border-gray-100 flex justify-between items-center md:block text-center">
-                <div class="text-left md:text-center whitespace-nowrap">
-                    <h2 class="font-heading font-bold text-base md:text-lg text-gray-900 leading-tight">
+        <aside id="admin-sidebar" class="w-full md:w-64 bg-white border-b md:border-r border-gray-200 flex-none flex flex-col no-print h-auto md:h-full shadow-sm md:shadow-none z-10 overflow-hidden">
+            <div class="p-4 md:p-6 border-b border-gray-100 flex justify-between items-center gap-3 md:block text-center">
+                <div class="text-left md:text-center flex-1 min-w-0 md:whitespace-nowrap">
+                    <h2 class="font-heading font-bold text-sm sm:text-base md:text-lg text-gray-900 leading-tight break-words">
                         Buku Tamu <br class="hidden md:block"> Ngunduh & Resepsi <br class="hidden md:block"> Nida & Diaz
                     </h2>
                     <p id="sidebar-role-title" class="text-[10px] md:text-xs text-gold-600 mt-1 md:mt-2 uppercase tracking-wider font-semibold">Administrator</p>
                 </div>
 
                 <!-- Tombol Keluar (Tampil di Mobile) -->
-                <button onclick="logout()" class="md:hidden flex items-center justify-center p-2 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-colors" title="Keluar">
+                <button onclick="logout()" class="md:hidden flex-shrink-0 flex items-center justify-center p-2 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-colors" title="Keluar">
                     <i class="ph ph-sign-out text-xl"></i>
                 </button>
             </div>
@@ -666,8 +675,8 @@
                 </div>
             </div>
 
-                        <!-- SOUVENIR SCAN SECTION -->
-            <div id="souvenir-section" class="hidden max-w-2xl mx-auto space-y-6">
+            <!-- SOUVENIR SCAN SECTION -->
+            <div id="souvenir-section" class="hidden max-w-6xl mx-auto space-y-6">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 no-print">
                     <div class="flex items-start gap-3">
                         <!-- Tombol Toggle Buka/Tutup Sidebar -->
@@ -681,7 +690,7 @@
                     </div>
 
                     <!-- Group Tombol Sinkron & Full Screen -->
-                    <div class="flex flex-wrap gap-2 w-full lg:w-auto">
+                    <div class="flex flex-wrap lg:flex-nowrap gap-2 w-full lg:w-auto flex-shrink-0">
                         <button onclick="manualSync()" class="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg text-blue-700 hover:bg-blue-100 transition-colors shadow-sm text-sm font-medium whitespace-nowrap">
                             <i class="ph ph-arrows-clockwise text-lg"></i>
                             Sinkron
@@ -693,7 +702,7 @@
                     </div>
                 </div>
 
-                <div class="no-print bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
+                <div class="no-print max-w-2xl mx-auto bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
                     <div id="souvenir-reader" class="w-full rounded-xl overflow-hidden bg-black flex items-center justify-center text-gray-400 text-sm" style="min-height:280px;">
                         Memuat kamera...
                     </div>
@@ -1379,39 +1388,62 @@ function stopDataPolling() {
             setSidebarState(!isSidebarOpen);
         }
 
-        function toggleSouvenirFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().then(() => {
-                    // Otomatis tutup sidebar saat masuk Full Screen agar tampilan scan lega
-                    setSidebarState(false);
-                }).catch(err => {
-                    showToast("Gagal mengaktifkan Full Screen: " + err.message, "error");
-                });
-            } else {
-                document.exitFullscreen().then(() => {
-                    // Buka kembali sidebar saat keluar Full Screen
-                    setSidebarState(true);
-                }).catch(err => {
-                    console.error(err);
-                });
-            }
-        }
+        let isSouvenirFullScreen = false;
 
-        // Sinkronkan tampilan tombol jika user menekan tombol ESC untuk keluar dari Full Screen
-        document.addEventListener('fullscreenchange', () => {
+        function updateSouvenirFullScreenUI(active) {
+            isSouvenirFullScreen = active;
             const btn = document.getElementById('btn-souvenir-fullscreen');
             const icon = document.getElementById('icon-souvenir-fullscreen');
             const text = document.getElementById('text-souvenir-fullscreen');
-            if (!btn || !icon || !text) return;
 
-            if (document.fullscreenElement) {
-                btn.className = "flex-1 lg:flex-none flex items-center justify-center gap-2 bg-gold-600 border border-gold-600 px-4 py-2 rounded-lg text-white hover:bg-gold-700 transition-colors shadow-sm text-sm font-medium whitespace-nowrap";
-                icon.className = "ph ph-corners-in text-lg";
-                text.innerText = "Keluar Full Screen";
+            if (active) {
+                document.body.classList.add('souvenir-fullscreen');
+                setSidebarState(false); // Tutup sidebar di desktop
+                if (btn && icon && text) {
+                    btn.className = "flex-1 lg:flex-none flex items-center justify-center gap-2 bg-gold-600 border border-gold-600 px-4 py-2 rounded-lg text-white hover:bg-gold-700 transition-colors shadow-sm text-sm font-medium whitespace-nowrap";
+                    icon.className = "ph ph-corners-in text-lg";
+                    text.innerText = "Keluar Full Screen";
+                }
             } else {
-                btn.className = "flex-1 lg:flex-none flex items-center justify-center gap-2 bg-white border border-gold-400 px-4 py-2 rounded-lg text-gold-700 hover:bg-gold-50 transition-colors shadow-sm text-sm font-medium whitespace-nowrap";
-                icon.className = "ph ph-corners-out text-lg";
-                text.innerText = "Full Screen";
+                document.body.classList.remove('souvenir-fullscreen');
+                setSidebarState(true); // Buka kembali sidebar di desktop
+                if (btn && icon && text) {
+                    btn.className = "flex-1 lg:flex-none flex items-center justify-center gap-2 bg-white border border-gold-400 px-4 py-2 rounded-lg text-gold-700 hover:bg-gold-50 transition-colors shadow-sm text-sm font-medium whitespace-nowrap";
+                    icon.className = "ph ph-corners-out text-lg";
+                    text.innerText = "Full Screen";
+                }
+            }
+        }
+
+        function toggleSouvenirFullScreen() {
+            if (!isSouvenirFullScreen) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().then(() => {
+                        updateSouvenirFullScreenUI(true);
+                    }).catch(() => {
+                        // Fallback agar tetap menutup header & menu di browser HP (misal Safari iOS)
+                        updateSouvenirFullScreenUI(true);
+                    });
+                } else {
+                    updateSouvenirFullScreenUI(true);
+                }
+            } else {
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().then(() => {
+                        updateSouvenirFullScreenUI(false);
+                    }).catch(() => {
+                        updateSouvenirFullScreenUI(false);
+                    });
+                } else {
+                    updateSouvenirFullScreenUI(false);
+                }
+            }
+        }
+
+        // Sinkronkan tampilan jika user keluar Full Screen pakai tombol ESC atau tombol Back di HP
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && isSouvenirFullScreen) {
+                updateSouvenirFullScreenUI(false);
             }
         });
         
