@@ -393,7 +393,7 @@
             </form>
 
             <div class="mt-8 pt-6 border-t border-gray-100 text-center">
-                <p class="text-[11px] md:text-xs text-gray-400 font-medium tracking-wide">© 2026 Thegar Diaztama, All Rights Reserved. Version 2.1.43 (10 Oct 2026).</p>
+                <p class="text-[11px] md:text-xs text-gray-400 font-medium tracking-wide">© 2026 Thegar Diaztama, All Rights Reserved. Version 2.3.0 (20 Nov 2026).</p>
             </div>
         </div>
     </div>
@@ -717,7 +717,7 @@
             </div>
 
             <footer class="mt-12 pb-2 w-full text-center no-print">
-                <p class="text-[11px] md:text-xs text-gray-400 font-medium tracking-wide">© 2026 Thegar Diaztama, All Rights Reserved. Version 2.1.43 (10 Oct 2026).</p>
+            <p class="text-[11px] md:text-xs text-gray-400 font-medium tracking-wide">© 2026 Thegar Diaztama, All Rights Reserved. Version 2.3.0 (20 Nov 2026).</p>
             </footer>
         </main>
     </div>
@@ -922,15 +922,15 @@
 
     <!-- Judul di luar box -->
     <p class="font-semibold text-gray-900 mb-3">
-        Update aplikasi Buku Tamu versi 2.14.3 (10 Oct 2026)
+        Update aplikasi Buku Tamu versi 2.3.0 (20 Nov 2026)
     </p>
 
     <!-- Box hanya berisi daftar update -->
     <div class="bg-gray-100 rounded-xl border border-gray-200 p-4 mb-5">
         <ul class="list-decimal list-inside space-y-2 text-sm text-gray-700">
-            <li>Penambahan pilihan "Tamu Baru" pada jenis tamu.</li>
-            <li>Penambahan statistik "Tamu Baru" pada dashboard.</li>
-            <li>Perbaikan hasil cetak pada halaman dashboard.</li>
+            <li>Menu sidebar dapat dibuka/tutup.</li>
+            <li>Penambahan tombol "Fullscreen" pada menu Scan Kupon Souvenir.</li>
+            <li>Perbaikan animasi Grafik Asal Tamu pada halaman Dashboard.</li>
             <li>Bug fixing.</li>
         </ul>
     </div>
@@ -1309,6 +1309,11 @@ function stopDataPolling() {
             // Bersihkan data sesi saat ini
             currentAdminType = '';
             guests = [];
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
+            }
+            hasChartAnimated = false;
 
             // Kosongkan form login
             document.getElementById('login-user').value = '';
@@ -1526,12 +1531,23 @@ function updateDashboard() {
     renderChart(asalCount);
 }
 
+        let hasChartAnimated = false;
+
         function renderChart(dataObj) {
             const ctx = document.getElementById('asalChart').getContext('2d');
             const labels = Object.keys(dataObj);
             const data = Object.values(dataObj);
             const colors = ['#d4af66', '#475569', '#94a3b8', '#cb9b42', '#fde68a', '#1e293b'];
 
+            // Jika grafik sudah pernah tampil dengan data, cukup update datanya tanpa animasi
+            if (chartInstance && hasChartAnimated) {
+                chartInstance.data.labels = labels;
+                chartInstance.data.datasets[0].data = data;
+                chartInstance.update('none');
+                return;
+            }
+
+            // Pertama kali data benar-benar muncul -> buat grafik dengan animasi awal
             if (chartInstance) chartInstance.destroy();
 
             chartInstance = new Chart(ctx, {
@@ -1546,6 +1562,10 @@ function updateDashboard() {
                     cutout: '60%'
                 }
             });
+
+            if (data.length > 0) {
+                hasChartAnimated = true;
+            }
         }
 
         function renderTable() {
