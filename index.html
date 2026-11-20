@@ -1099,11 +1099,41 @@
             .classList.add('hidden');
         }
 
+        let isSaving = false;
+        let pendingSave = false;
+        let saveTimer = null;
+
         function saveData() {
             localStorage.setItem(storageKey, JSON.stringify(guests));
-            apiPost('syncGuests', { adminType: currentAdminType, guests }).catch((err) => {
+            syncRequestId++; // Batalkan hasil sinkron lama yang masih berjalan
+
+            // Gabungkan edit beruntun dalam 500ms agar tidak saling menimpa di server
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => {
+                saveTimer = null;
+                flushSaveToServer();
+            }, 500);
+        }
+
+        async function flushSaveToServer() {
+            if (isSaving) {
+                pendingSave = true;
+                return;
+            }
+            isSaving = true;
+            pendingSave = false;
+
+            try {
+                await apiPost('syncGuests', { adminType: currentAdminType, guests });
+            } catch (err) {
                 console.error("Gagal sinkron data: ", err);
-            });
+                showToast("Gagal menyimpan ke server: " + err.message, "error");
+            } finally {
+                isSaving = false;
+                if (pendingSave) {
+                    flushSaveToServer();
+                }
+            }
         }
 
         // FUNGSI SINKRONISASI MANUAL
@@ -1137,6 +1167,9 @@ async function silentSync() {
     const listSec = document.getElementById('list-section');
     if (listSec && !listSec.classList.contains('hidden')) {
         return;
+    }
+    if (isSaving || pendingSave || saveTimer) {
+        return; // Tunggu sampai proses simpan ke server selesai
     }
     const myRequestId = ++syncRequestId;
     try {
